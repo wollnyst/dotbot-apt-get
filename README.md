@@ -1,9 +1,8 @@
 # Dotbot apt-get Plugin
 
 For use with [dotbot](https://github.com/anishathalye/dotbot),
-this plugin allows one to list ones favorite
-apt-get packages to make setting up a new system
-that much easier.
+this plugin allows one to easily
+install or upgrade a list of apt-get packages.
 
 ## Usage
 
