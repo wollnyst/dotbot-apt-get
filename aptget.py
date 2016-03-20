@@ -33,6 +33,9 @@ class AptGet(dotbot.Plugin):
         results = {}
         successful = [PkgStatus.UP_TO_DATE, PkgStatus.INSTALLED]
 
+        # apt-get update
+        self._update_index()
+
         for pkg in packages:
             if isinstance(pkg, dict):
                 self._log.error('Incorrect format')
@@ -51,22 +54,28 @@ class AptGet(dotbot.Plugin):
             self._log.info('All packages installed successfully')
             success = True
         else:
-            # self._log.error('Some packages were not installed successfully')
-            pass
+            success = False
+
         for status, amount in results.items():
             log = self._log.info if status in successful else self._log.error
             log('{} {}'.format(amount ,status.value))
 
-            success = False
-
         return success
+
+    def _update_index(self):
+        cmd = 'apt-get update'
+        process = subprocess.Popen(cmd, shell=True,
+                                   stdout=subprocess.PIPE,
+                                   stderr=subprocess.STDOUT)
+        out = process.stdout.read()
+        process.stdout.close()
 
     def _install(self, pkg):
         cmd = 'apt-get install {} -y'.format(pkg)
-        aptget = subprocess.Popen(cmd, shell=True,
+        process = subprocess.Popen(cmd, shell=True,
                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        out = aptget.stdout.read()
-        aptget.stdout.close()
+        out = process.stdout.read()
+        process.stdout.close()
         
         for item in self._strings.keys():
             if out.find(self._strings[item]) >= 0:
