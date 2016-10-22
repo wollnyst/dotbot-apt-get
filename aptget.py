@@ -37,6 +37,7 @@ class AptGet(dotbot.Plugin):
         self._update_index()
 
         for pkg in packages:
+            pkgName = ""
             if isinstance(pkg, dict):
                 self._log.error('Incorrect format')
             elif isinstance(pkg, list):
@@ -45,16 +46,16 @@ class AptGet(dotbot.Plugin):
 	        self._log.lowinfo("Adding PPA: '{}'".format(ppa))
                 self._add_ppa(ppa)
             else:
-                pass
-	    self._log.lowinfo("Installing package: '{}'".format(pkg))
-            result = self._install(pkg)
+                pkgName = pkg
+	    self._log.info("Handling package: '{}'...".format(pkgName))
+            result = self._install(pkgName)
             results[result] = results.get(result, 0) + 1
             if result not in successful:
-                self._log.error("Could not install package: '{}'".format(pkg))
+                self._log.error("Could not install package: '{}'".format(pkgName))
 	    elif result == PkgStatus.UP_TO_DATE:
-	    	self._log.info("Package is already up to date: '{}'".format(pkg))
+	    	self._log.info("Package is already up to date: '{}'".format(pkgName))
 	    elif result == PkgStatus.INSTALLED:
-		self._log.info("Installed package: '{}'".format(pkg))
+		self._log.info("Installed package: '{}'".format(pkgName))
 
 
         if all([result in successful for result in results.keys()]):
