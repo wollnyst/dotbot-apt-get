@@ -27,7 +27,7 @@ class AptGet(dotbot.Plugin):
             raise ValueError('Apt-get cannot handle directive %s' %
                 directive)
         return self._process(data)
-    
+
     def _process(self, packages):
         defaults = self._context.defaults().get('apt-get', {})
         results = {}
@@ -40,8 +40,10 @@ class AptGet(dotbot.Plugin):
             if isinstance(pkg, dict):
                 self._log.error('Incorrect format')
             elif isinstance(pkg, list):
-                # self._log.error('Incorrect format')
-                pass
+                pkgName = pkg[0]
+                ppa = pkg[1] if len(pkg) > 1 else None
+	        self._log.lowinfo("Adding PPA: '{}'".format(ppa))
+                self._add_ppa(ppa)
             else:
                 pass
 	    self._log.lowinfo("Installing package: '{}'".format(pkg))
@@ -75,13 +77,21 @@ class AptGet(dotbot.Plugin):
         out = process.stdout.read()
         process.stdout.close()
 
+    def _add_ppa(self, ppa):
+        cmd = 'add-apt-repository -y ppa:{}'.format(ppa)
+        process = subprocess.Popen(cmd, shell=True,
+                                   stdout=subprocess.PIPE,
+                                   stderr=subprocess.STDOUT)
+        out = process.stdout.read()
+        process.stdout.close()
+
     def _install(self, pkg):
         cmd = 'apt-get install {} -y'.format(pkg)
         process = subprocess.Popen(cmd, shell=True,
                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         out = process.stdout.read()
         process.stdout.close()
-        
+
         for item in self._strings.keys():
             if out.find(self._strings[item]) >= 0:
                 return item
