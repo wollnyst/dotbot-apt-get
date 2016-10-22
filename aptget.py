@@ -44,10 +44,15 @@ class AptGet(dotbot.Plugin):
                 pass
             else:
                 pass
+	    self._log.lowinfo("Installing package: '{}'".format(pkg))
             result = self._install(pkg)
             results[result] = results.get(result, 0) + 1
             if result not in successful:
-                self._log.error("Could not install package '{}'".format(pkg))
+                self._log.error("Could not install package: '{}'".format(pkg))
+	    elif result == PkgStatus.UP_TO_DATE:
+	    	self._log.info("Package is already up to date: '{}'".format(pkg))
+	    elif result == PkgStatus.INSTALLED:
+		self._log.info("Installed package: '{}'".format(pkg))
 
 
         if all([result in successful for result in results.keys()]):
