@@ -47,7 +47,7 @@ class AptGet(dotbot.Plugin):
                 self._add_ppa(ppa)
             else:
                 pkgName = pkg
-	    self._log.lowinfo("Handling package: '{}'...".format(pkgName))
+	    #self._log.lowinfo("Handling package: '{}'...".format(pkgName))
             result = self._install(pkgName)
             results[result] = results.get(result, 0) + 1
             if result not in successful:
@@ -59,7 +59,7 @@ class AptGet(dotbot.Plugin):
 
 
         if all([result in successful for result in results.keys()]):
-            self._log.info('All packages installed successfully')
+            self._log.info('All packages handled successfully')
             success = True
         else:
             success = False
