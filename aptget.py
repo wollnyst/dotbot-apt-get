@@ -85,6 +85,7 @@ class AptGet(dotbot.Plugin):
                                    stderr=subprocess.STDOUT)
         out = process.stdout.read()
         process.stdout.close()
+        self._update_index() # apt-get update
 
     def _install(self, pkg):
         cmd = 'apt-get install {} -y'.format(pkg)
