@@ -1,12 +1,11 @@
 import os, subprocess, dotbot
 from enum import Enum
 
-class PkgStatus(Enum):
-    UP_TO_DATE = 'Already up to date'
-    INSTALLED = 'Newly installed'
+UP_TO_DATE = 'Already up to date'
+INSTALLED = 'Newly installed'
 
-    NOT_FOUND = 'Not found'
-    NOT_SURE = 'Could not determine'
+NOT_FOUND = 'Not found'
+NOT_SURE = 'Could not determine'
 
 class AptGet(dotbot.Plugin):
     _directive = 'apt-get'
@@ -15,9 +14,9 @@ class AptGet(dotbot.Plugin):
         super(AptGet, self).__init__(self)
         self._context = context
         self._strings = {}
-        self._strings[PkgStatus.UP_TO_DATE] = "is already the newest"
-        self._strings[PkgStatus.INSTALLED] = ""
-        self._strings[PkgStatus.NOT_FOUND] = "Unable to locate package"
+        self._strings[UP_TO_DATE] = "is already the newest"
+        self._strings[INSTALLED] = ""
+        self._strings[NOT_FOUND] = "Unable to locate package"
 
     def can_handle(self, directive):
         return directive == self._directive
@@ -31,7 +30,7 @@ class AptGet(dotbot.Plugin):
     def _process(self, packages):
         defaults = self._context.defaults().get('apt-get', {})
         results = {}
-        successful = [PkgStatus.UP_TO_DATE, PkgStatus.INSTALLED]
+        successful = [UP_TO_DATE, INSTALLED]
 
         # apt-get update
         self._update_index()
@@ -52,9 +51,9 @@ class AptGet(dotbot.Plugin):
             results[result] = results.get(result, 0) + 1
             if result not in successful:
                 self._log.error("Could not install package: '{}'".format(pkgName))
-	    elif result == PkgStatus.UP_TO_DATE:
+	    elif result == UP_TO_DATE:
 	    	self._log.info("Package is already up to date: '{}'".format(pkgName))
-	    elif result == PkgStatus.INSTALLED:
+	    elif result == INSTALLED:
 		self._log.info("Installed package: '{}'".format(pkgName))
 
 
@@ -99,5 +98,5 @@ class AptGet(dotbot.Plugin):
                 return item
 
         self._log.warn("Could not determine what happened with package {}".format(pkg))
-        return PkgStatus.NOT_SURE
+        return NOT_SURE
 
