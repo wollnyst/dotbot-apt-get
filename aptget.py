@@ -1,5 +1,4 @@
 import os, subprocess, dotbot
-from enum import Enum
 
 UP_TO_DATE = 'Already up to date'
 INSTALLED = 'Newly installed'
