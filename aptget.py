@@ -41,7 +41,7 @@ class AptGet(dotbot.Plugin):
             elif isinstance(pkg, list):
                 pkgName = pkg[0]
                 ppa = pkg[1] if len(pkg) > 1 else None
-                self._log.lowinfo("Adding PPA: '{}'".format(ppa))
+	        self._log.lowinfo("Adding PPA: '{}'".format(ppa))
                 self._add_ppa(ppa)
             else:
                 pkgName = pkg
