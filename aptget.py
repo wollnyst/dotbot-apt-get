@@ -41,19 +41,19 @@ class AptGet(dotbot.Plugin):
             elif isinstance(pkg, list):
                 pkgName = pkg[0]
                 ppa = pkg[1] if len(pkg) > 1 else None
-	        self._log.lowinfo("Adding PPA: '{}'".format(ppa))
+            self._log.lowinfo("Adding PPA: '{}'".format(ppa))
                 self._add_ppa(ppa)
             else:
                 pkgName = pkg
-	    #self._log.lowinfo("Handling package: '{}'...".format(pkgName))
+        #self._log.lowinfo("Handling package: '{}'...".format(pkgName))
             result = self._install(pkgName)
             results[result] = results.get(result, 0) + 1
             if result not in successful:
                 self._log.error("Could not install package: '{}'".format(pkgName))
-	    elif result == UP_TO_DATE:
-	    	self._log.info("Package is already up to date: '{}'".format(pkgName))
-	    elif result == INSTALLED:
-		self._log.info("Installed package: '{}'".format(pkgName))
+        elif result == UP_TO_DATE:
+            self._log.info("Package is already up to date: '{}'".format(pkgName))
+        elif result == INSTALLED:
+        self._log.info("Installed package: '{}'".format(pkgName))
 
 
         if all([result in successful for result in results.keys()]):
@@ -61,10 +61,6 @@ class AptGet(dotbot.Plugin):
             success = True
         else:
             success = False
-
-        for status, amount in results.items():
-            log = self._log.info if status in successful else self._log.error
-            log('{} {}'.format(amount ,status.value))
 
         return success
 
